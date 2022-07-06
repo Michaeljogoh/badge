@@ -29,10 +29,16 @@ res.status(200).json({getTweets , totalPages:Math.ceil(count / limit), currentPa
 
 }
 
+// Delete
+const deleteTweets = async (req , res) =>{
+        await Tweets.findByIdAndDelete(req.params.id);
+        res.status(200).json("Post has been deleted...");
+    }
+ 
 
 
 
 
 
 
-module.exports = {createTweet , getTweets}
+module.exports = {createTweet , getTweets , deleteTweets}

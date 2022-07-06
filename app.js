@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const {MongoURI}  = require('./config/key');
 const authRoutes = require('./routes/authRoutes');
 const tweetRoutes = require('./routes/tweetRoutes');
+const commentRoutes = require('./routes/commentRoutes')
 
 // mongoose connection
 mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTopology: true})
@@ -15,11 +16,14 @@ mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTop
 
 // Cross origin 
 app.use(cors());
+
 // Body parser
 app.use(express.json());
+
 // Routes
 app.use(authRoutes);
 app.use(tweetRoutes);
+app.use(commentRoutes);
 
 
 
