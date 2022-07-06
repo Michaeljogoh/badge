@@ -1,10 +1,9 @@
 const express = require('express');
 const app = express();
 const router  = express.Router();
+const {signUp} = require('../controllers/authController')
 
-router.get("/" , (req , res) =>{
-    res.send('hello world')
-});
+router.post('/signup' , signUp );
 
 
 
