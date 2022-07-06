@@ -46,6 +46,26 @@ const newUser = new Users({name , email , username ,  password , password2})
 }
 
 const signIn = async  (req , res ) =>{
+    const {username , password} = req.body;
+    if(!username  || !password){
+        res.json(422).json({error:'Incorrect Password!!!'})
+    }
+    
+    await Users.findOne({username : username})
+    .then(savedUser =>{
+        if(!savedUser){
+            return res.status(422).json({error:"Invalid email or  password"})
+        }
+        bcrypt.compare(password, savedUser.password)
+        .then(isMatch =>{
+            if(isMatch){
+                res.status(200).json({message:"Succesfully Logged In"})
+            } else {
+                return res.status(422).json({error:"Invalid email or  password"})
+            }
+        })
+        .catch(err => console.log(err))
+    });
 
 }
 
