@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models/Users');
 
 
-const ensureAuthorization = async (req , res , next) =>{
+const ensureAuthorizated = async (req , res , next) =>{
     const {authorization} = req.headers;
     if(!authorization){
         res.status(401).json({error: "You must login in"})
@@ -15,10 +15,11 @@ const ensureAuthorization = async (req , res , next) =>{
         const {_id} = payload
         Users.findById(_id).then(userdata =>{
             req.user = userdata
+            next()
         })
-        next()
+       
   })
 
 } 
 
-module.exports = { ensureAuthorization }
+module.exports = { ensureAuthorizated }

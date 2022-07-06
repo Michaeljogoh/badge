@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
-
-const PostSchema = new mongoose.Schema({
+const {ObjectId} = mongoose.Schema.Types
+const TweetSchema = new mongoose.Schema({
+    
     content:{
         type: String,
         required: true,
     },
     postBy:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref:"Users"
 
     }
 })
 
-const Tweets = mongoose.model('Tweets', PostSchema)
+const Tweets = mongoose.model('Tweets', TweetSchema)
 module.exports = Tweets;
