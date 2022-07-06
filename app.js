@@ -6,6 +6,7 @@ const PORT = process.env.PORT
 const mongoose = require('mongoose');
 const {MongoURI}  = require('./config/key');
 const authRoutes = require('./routes/authRoutes');
+const tweetRoutes = require('./routes/tweetRoutes');
 
 // mongoose connection
 mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTopology: true})
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 // Routes
 app.use(authRoutes);
+app.use(tweetRoutes);
 
 
 
