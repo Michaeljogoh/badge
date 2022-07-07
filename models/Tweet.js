@@ -6,6 +6,12 @@ const TweetSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    likes:[
+        {
+        type:ObjectId, 
+        ref:"Users"
+        }
+        ],
     postBy:{
         type: ObjectId,
         ref:"Users"
@@ -13,5 +19,5 @@ const TweetSchema = new mongoose.Schema({
     }
 })
 
-const Tweets = mongoose.model('Tweets', TweetSchema)
-module.exports = Tweets;
+const Tweet = mongoose.model('Tweet', TweetSchema)
+module.exports = Tweet;
