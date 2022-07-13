@@ -35,7 +35,7 @@ const newUser = new Users({name , email , username ,  password , password2})
                 newUser.password = hash
                 // save 
                 await newUser.save();
-                res.status(200).json({newUser});
+                res.status(200).json("Registered");
             })
         )
 

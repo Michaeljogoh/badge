@@ -7,11 +7,16 @@ const CommentSchema = new mongoose.Schema({
         required: true
     },
    
-    postBy: {
+    tweetId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users'
+        ref: 'Tweet'
+    },
+    commentBy:{
+        type: mongoose.Schema.Types.ObjectId ,
+        ref:"Users"
+
     }
 })
 
-const Comments = mongoose.model('Comments' , CommentSchema)
-module.exports = Comments;
+const Comment = mongoose.model('Comment' , CommentSchema)
+module.exports = Comment;

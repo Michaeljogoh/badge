@@ -7,7 +7,8 @@ const mongoose = require('mongoose');
 const {MongoURI}  = require('./config/key');
 const authRoutes = require('./routes/authRoutes');
 const tweetRoutes = require('./routes/tweetRoutes');
-const commentRoutes = require('./routes/commentRoutes')
+const commentRoutes = require('./routes/commentRoutes');
+const homeRoutes = require('./routes/homeRoutes');
 
 // mongoose connection
 mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTopology: true})
@@ -21,9 +22,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use(authRoutes);
-app.use(tweetRoutes);
-app.use(commentRoutes);
+app.use('/', homeRoutes);
+app.use("/auth", authRoutes);
+app.use("/tweets", tweetRoutes);
+app.use("/comments", commentRoutes);
 
 
 
