@@ -8,7 +8,7 @@ const createTweet = async (req , res ) =>{
 
     }
     const newPost = await Tweets.create({content , postBy : req.user })
-    res.status(200).json("Tweet Created!!!")
+    res.status(200).json({newPost})
    
 
 }
@@ -30,29 +30,56 @@ res.status(200).json({getTweets , totalPages:Math.ceil(count / limit), currentPa
 
 
 
-// update
+// Update
 const updateTweets = async (req, res) => { 
     const newTweet = await Tweets.findById(req.params.id);
-    if (newTweet?.postBy === req.body.postBy) {
+    if(!newTweet){
+      return res.status(422).json('Tweet Not Available')
+    }
+    if (newTweet?.postBy._id.toString() === req.user._id.toString()) {
         const updatedPost = await Tweets.findByIdAndUpdate(req.params.id,{ $set: req.body, },{ new: true });
         res.status(200).json({updatedPost});   
     } else {
-      res.status(401).json("You can update only your post!");
+      res.status(401).json("You Can Update Only Your Post!");
     }
 
   }
 
-    // Delete
-const deleteTweets = async (req , res) =>{
-    const newTweet = await Tweets.findById(req.params.id);
-    if (newTweet?.postBy === req.body.postBy) {
-        await Tweets.findByIdAndDelete(req.params.id);
-        res.status(200).json("Post has been deleted...");
-      }else {
-      res.status(401).json("You can delete only your post!");
-    }
- 
+// Delete
+const deleteTweets  =  async (req , res) =>{
+const newTweet = await Tweets.findById(req.params.id)
+  if(!newTweet){
+    return res.status(422).json('Tweet Not Available')
   }
+  if(newTweet.postBy._id.toString() === req.user._id.toString()){
+    await Tweets.findByIdAndDelete(req.params.id)
+    res.status(200).json("Tweet Deleted")
+  } else {
+    res.status(403).json("You Can Delete Only Your Post!")
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const likeTweets = async (req , res ) =>{
   await Tweets.findByIdAndUpdate(req.body.tweetId, {
