@@ -4,11 +4,10 @@ const cors = require('cors');
 require('dotenv').config();
 const PORT = process.env.PORT
 const mongoose = require('mongoose');
-const {MongoURI}  = require('./config/key');
 const authRoutes = require('./routes/authRoutes');
 const tweetRoutes = require('./routes/tweetRoutes');
 const commentRoutes = require('./routes/commentRoutes');
-const homeRoutes = require('./routes/homeRoutes');
+const errorHandler = require('./middeware/errorHandler');
 
 // mongoose connection
 mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTopology: true})
@@ -22,10 +21,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/', homeRoutes);
+app.use("/", tweetRoutes);
 app.use("/auth", authRoutes);
-app.use("/tweets", tweetRoutes);
 app.use("/comments", commentRoutes);
+app.use(errorHandler);
 
 
 
