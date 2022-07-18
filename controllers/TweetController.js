@@ -37,7 +37,7 @@ const updateTweets = async (req, res) => {
       return res.status(422).json('Tweet Not Available')
     }
     if (newTweet?.postBy._id.toString() === req.user._id.toString()) {
-        const updatedPost = await Tweets.findByIdAndUpdate(req.params.id,{ $set: req.body, },{ new: true });
+        const updatedPost = await Tweets.findByIdAndUpdate(req.params.id,{ $set: req.body},{ new: true });
         res.status(200).json({updatedPost});   
     } else {
       res.status(401).json("You Can Update Only Your Post!");
@@ -58,27 +58,6 @@ const newTweet = await Tweets.findById(req.params.id)
     res.status(403).json("You Can Delete Only Your Post!")
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   const likeTweets = async (req , res ) =>{

@@ -11,9 +11,9 @@ router.get('/' , getTweets);
 
 router.post('/tweets', ensureAuthorizated, createTweet);
 
-router.patch('/update/:id', ensureAuthorizated,  updateTweets);
+router.patch('/:id', ensureAuthorizated,  updateTweets);
 
-router.delete('/delete/:id',  ensureAuthorizated, deleteTweets);
+router.delete('/:id',  ensureAuthorizated, deleteTweets);
 
 router.put('/likes',ensureAuthorizated ,likeTweets);
 
