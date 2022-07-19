@@ -6,12 +6,46 @@ const TweetSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+
     likes:[
         {
         type:ObjectId, 
         ref:"Users"
         }
         ],
+
+
+
+
+
+
+        
+
+
+
+
+
+    retweet:[
+        {
+            type:ObjectId,
+            ref:"Tweet"
+        }
+    ],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     postBy:{
         type: ObjectId,
         ref:"Users"

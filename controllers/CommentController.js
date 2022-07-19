@@ -26,5 +26,17 @@ res.status(200).json({getComments , totalPages:Math.ceil(count / limit), current
 
 }
 
+const deleteComment = async (req , res) =>{
+  const newDeleteComment = await Comment.findById(req.params.id)
+  if(newDeleteComment.postBy._id.toString() === req.user._id.toString()){
+    await Comment.findByIdAndDelete(req.params.id)
+    res.status(200).json("Comment Deleted")
+  } else {
+    res.status(403).json("You can only delete your comment")
+   }
+ 
+  
+}
 
-module.exports = {createComments  , getComments}
+
+module.exports = {createComments  , getComments , deleteComment}
