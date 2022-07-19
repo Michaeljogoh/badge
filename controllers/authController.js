@@ -69,7 +69,7 @@ const login = async  (req , res ) =>{
         .then(doMatch=>{
             if(doMatch){
                 // res.json({message:"successfully signed in"})
-               const token = jwt.sign({_id:savedUser._id},process.env.JWT_SECRET)
+               const token = jwt.sign({_id:savedUser._id},process.env.JWT_SECRET , {expiresIn : '1d'})
                res.status(200).json({token})
             }
             else{
@@ -84,6 +84,19 @@ const login = async  (req , res ) =>{
 
 
 }
+
+
+
+
+
+
+const logout = async (req , res) =>{
+    res.cookie("jwt" , "")
+
+}
+
+
+
 
 
 const changePassword = async (req , res) =>{
@@ -106,4 +119,4 @@ const changePassword = async (req , res) =>{
     
 
 }
-module.exports = {register , login , changePassword}
+module.exports = {register , login , changePassword, logout}

@@ -16,34 +16,12 @@ const TweetSchema = new mongoose.Schema({
 
 
 
-
-
-
-        
-
-
-
-
-
-    retweet:[
+    retweet:
         {
+            
             type:ObjectId,
             ref:"Tweet"
-        }
-    ],
-
-
-
-
-
-
-
-
-
-
-
-
-
+        },
 
 
     postBy:{

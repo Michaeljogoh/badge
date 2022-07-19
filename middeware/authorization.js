@@ -8,7 +8,7 @@ const ensureAuthorizated = async (req , res , next) =>{
         res.status(401).json({error: "You must login in"})
     }
 const token = authorization.replace("Bearer ","")
-  jwt.verify(token , process.env.JWT_SECRET , async (err , payload) =>{
+  jwt.verify(token , process.env.JWT_SECRET , async (err , payload ,) =>{
         if(err){
             return res.status(401).json({error:"You must login in"})
         }

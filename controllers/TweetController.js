@@ -77,18 +77,8 @@ const newTweet = await Tweets.findById(req.params.id)
 
 
 
-
-
-
-
-  
-
-
-
-
   const reTweets = async (req , res) =>{
-    await Tweets.create(req.body.tweetId,
-      {$push:{retweet:req.user._id}}, {new: true} )
+      await Tweets.create({retweet :req.params.id ,  postBy: req.user } )
     res.status(200).json('Retweeted')
 
 
@@ -96,17 +86,8 @@ const newTweet = await Tweets.findById(req.params.id)
 
 
 
-
-
-
-
-
-
-
-
-   
-  const unReTweets = async (req , res) =>{
-    await Tweets.findByIdAndDelete(req.body.tweetId, {$pull:{retweet: req.user._id}})
+const unReTweets = async (req , res) =>{
+    await Tweets.findByIdAndDelete({retweet :req.params.id})
     res.status(200).json('UnRetweet')
   }
  
