@@ -7,7 +7,4 @@ const { ensureAuthorizated } = require('../middeware/authorization');
 router.post('/profile' , ensureAuthorizated, createProfile);
 
 
-
-
-
 module.exports = router;
