@@ -21,7 +21,7 @@ router.put('/unlikes',ensureAuthorizated , unLikeTweets);
 
 router.post('/retweets', ensureAuthorizated , reTweets);
 
-router.delete('/unretweets' , ensureAuthorizated , unLikeTweets);
+router.delete('/unretweets/id' , ensureAuthorizated , unLikeTweets);
 
 
 
