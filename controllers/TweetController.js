@@ -37,7 +37,7 @@ const updateTweets = async (req, res) => {
       return res.status(422).json('Tweet Not Available')
     }
     if (newTweet?.postBy._id.toString() === req.user._id.toString()) {
-        const updatedPost = await Tweets.findByIdAndUpdate(req.params.id,{ $set: req.body, },{ new: true });
+        const updatedPost = await Tweets.findByIdAndUpdate(req.params.id,{ $set: req.body},{ new: true });
         res.status(200).json({updatedPost});   
     } else {
       res.status(401).json("You Can Update Only Your Post!");
@@ -60,27 +60,6 @@ const newTweet = await Tweets.findById(req.params.id)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const likeTweets = async (req , res ) =>{
   await Tweets.findByIdAndUpdate(req.body.tweetId, {
       $push:{likes:req.user._id}
@@ -94,7 +73,23 @@ const newTweet = await Tweets.findById(req.params.id)
     }, {new: true})
     res.status(200).json('UnLiked')
   }
+
+
+
+
+  const reTweets = async (req , res) =>{
+      await Tweets.create({retweet :req.params.id ,  postBy: req.user } )
+    res.status(200).json('Retweeted')
+
+
+  }
+
+
+const unReTweets = async (req , res) =>{
+    await Tweets.findByIdAndDelete({retweet :req.params.id})
+    res.status(200).json('UnRetweet')
+  }
  
 
 
-module.exports = {createTweet , getTweets , deleteTweets , updateTweets , likeTweets , unLikeTweets}
+module.exports = {createTweet , getTweets , deleteTweets , updateTweets , likeTweets , unLikeTweets , reTweets , unReTweets }

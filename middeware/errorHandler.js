@@ -1,7 +1,7 @@
-const  errorHandler = (e)=>{
+const  errorHandler = (fn)=>{
     return async (req, res, next) =>{
         try {
-     await e (req, res , next);
+     await fn (req, res , next);
         } catch (error) {
             next(error)
     };
