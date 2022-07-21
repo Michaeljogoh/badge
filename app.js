@@ -8,7 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const tweetRoutes = require('./routes/tweetRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const errorHandler = require('./middeware/errorHandler');
-const proflleRoutes = require('./routes/profileRoutes')
+const proflleRoutes = require('./routes/profileRoutes');
+const likeRoutes = require('./routes/profileRoutes');
 
 // mongoose connection
 mongoose.connect(process.env.twitter_DB , {useNewUrlParser: true , useUnifiedTopology: true})
@@ -26,6 +27,7 @@ app.use("/", tweetRoutes);
 app.use("/auth", authRoutes);
 app.use("/comments", commentRoutes);
 app.use('/profile', proflleRoutes);
+app.use('/likes', likeRoutes)
 app.use(errorHandler);
 
 

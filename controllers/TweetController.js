@@ -28,8 +28,6 @@ res.status(200).json({getTweets , totalPages:Math.ceil(count / limit), currentPa
 }
 
 
-
-
 // Update
 const updateTweets = async (req, res) => { 
     const newTweet = await Tweets.findById(req.params.id);
@@ -60,22 +58,6 @@ const newTweet = await Tweets.findById(req.params.id)
 }
 
 
-  const likeTweets = async (req , res ) =>{
-  await Tweets.findByIdAndUpdate(req.body.tweetId, {
-      $push:{likes:req.user._id}
-    }, {new: true})
-    res.status(200).json('Liked')
-  }
-
-  const unLikeTweets = async (req , res ) =>{
-   await Tweets.findByIdAndUpdate(req.body.tweetId, {
-      $pull:{likes:req.user._id}
-    }, {new: true})
-    res.status(200).json('UnLiked')
-  }
-
-
-
 
   const reTweets = async (req , res) =>{
       await Tweets.create({retweet :req.params.id ,  postBy: req.user } )
@@ -92,4 +74,4 @@ const unReTweets = async (req , res) =>{
  
 
 
-module.exports = {createTweet , getTweets , deleteTweets , updateTweets , likeTweets , unLikeTweets , reTweets , unReTweets }
+module.exports = {createTweet , getTweets , deleteTweets , updateTweets , reTweets , unReTweets }

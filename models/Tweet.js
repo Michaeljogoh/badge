@@ -7,18 +7,8 @@ const TweetSchema = new mongoose.Schema({
         required: true,
     },
 
-    likes:[
-        {
-        type:ObjectId, 
-        ref:"Users"
-        }
-        ],
-
-
-
     retweet:
         {
-            
             type:ObjectId,
             ref:"Tweet"
         },
