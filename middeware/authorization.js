@@ -1,24 +1,31 @@
-const jwt = require('jsonwebtoken');
 const Users = require('../models/Users');
+const jwt = require('jsonwebtoken');
 
 
 const ensureAuthorizated = async (req , res , next) =>{
-    const {authorization} = req.headers;
+
+const {authorization } = req.headers;
     if(!authorization){
-        res.status(401).json({error: "You must login in"})
+        return res.status(401).json({error:"You must login to access this page" })
     }
-const token = authorization.replace("Bearer ","")
-  jwt.verify(token , process.env.JWT_SECRET , async (err , payload ,) =>{
-        if(err){
-            return res.status(401).json({error:"You must login in"})
-        }
+    try {
+ const token = authorization.replace('Bearer', '')
+
+const verify =  jwt.verify(token , process.env.JWT_SECRET, async (payload)=>{
+     
 const {_id} = payload
 
 const userdata = await Users.findById(_id)
         req.user = userdata
-         next()
-       })
+        next()
+    })
+        
+    } catch (error) {
+     res.status(400).json('Invalid token')   
+    }
 
-} 
+
+}
+
 
 module.exports = { ensureAuthorizated }

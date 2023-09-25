@@ -1,13 +1,15 @@
 const Users = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const randomstring = require('randomstring')
 
 
 // Sign Up
 const register = async (req , res)  =>{
-const {name , email , username , password , password2 } = req.body;
+const {name , email ,  password , password2 } = req.body;
     //Validation
-    if(!name || !email || !username || !password || !password2 ){
+    if(!name || !email  || !password || !password2 ){
         res.status(422).json({error:"Please fill in all field"})
     }
 
@@ -26,15 +28,8 @@ const newEmail = await Users.findOne({email : email })
         res.status(422).json({error:"Email already registered"})
       } 
 
-const newUser = await Users.findOne({username : username})
 
-    if(newUser){
-
-        res.status(422).json({error:"Username already exists!"})
-
-
-    }  else {
-const newUser = new Users({name , email , username ,  password , password2})
+const newUser = new Users({name , email ,  password , password2})
         //Hash password
         bcrypt.genSalt(10 , ( err , salt)=>
              bcrypt.hash(newUser.password, salt , async ( err , hash) =>{
@@ -42,13 +37,13 @@ const newUser = new Users({name , email , username ,  password , password2})
                 newUser.password = hash
                 // save 
                 await newUser.save();
-                res.status(200).json("Registered");
+                res.status(200).json({newUser});
             })
         )
 
     }
 
-    }
+    
    
     
 
@@ -56,11 +51,11 @@ const newUser = new Users({name , email , username ,  password , password2})
 // Sign In
 const login = async  (req , res ) =>{
     
-    const {username , password} = req.body
-    if(!username || !password){
+    const {email , password} = req.body
+    if(!email || !password){
        return res.status(422).json({error:"please add email or password"})
     }
-  await Users.findOne({username:username})
+  await Users.findOne({email})
     .then(savedUser=>{
         if(!savedUser){
            return res.status(422).json({error:"Invalid Email or password"})
@@ -87,36 +82,87 @@ const login = async  (req , res ) =>{
 
 
 
+const sendForgetPasswordMail = async ( email , token) =>{
+    try {
+        const transporter = nodemailer.createTransport({
+            host:'smtp.gmail.com',
+            post:587,
+            secure:false,
+            requireTLS: true,
+            auth:{
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
 
+            }
+        })
+      const mailOptions = {
+        from:process.env.EMAIL_USER,
+        to:  email,
+        subject:"Reset Password",
+        html:'<p>Please copy the link below and your <a href="http://localhost:3000/auth/reset-password?token='+ token +'">reset password</a>'
+      }
 
+     transporter.sendMail(mailOptions ,function(err , info){
+        if(err){
+        console.log(err)
+        }  else{
+            console.log('email has been sent')
+            console.log(info)
+        }
 
-const logout = async (req , res) =>{
-    res.cookie("jwt" , "")
-
+     })
+      
+    } catch (error) {
+         console.log(error)
+    }
 }
 
 
 
+const forgetPassword =  async (req , res) =>{
+    try {
+        const  email  = req.body.email;
+        const userData =  await Users.findOne({ email: email  });
+        if(userData){
+            const randomString = randomstring.generate();
+            const data = await Users.updateOne({email:email}, {$set:{token: randomString}});
+            sendForgetPasswordMail(userData.email, randomString)
+            res.status(200).json({success:'Check your inbox, to reset password'})
+        } else{
+            res.status(404).json({success:'User does not exists'})
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+const securePassword = async (password) =>{
+    try {
+      const passwordHash =   await bcrypt.hash(password, 10);
+      return passwordHash;
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
-const changePassword = async (req , res) =>{
-  
-  const {authorization} = req.headers;
-
-  const {  newPassword } = req.body;
-
-  const token = authorization.replace("Bearer ","");
-
-  const user = jwt.verify(token , process.env.JWT_SECRET)
-  
-  const _id = user._id
-
-  const  password = await bcrypt.hash(newPassword , 10)
-  
-  const update =  await Users.updateOne({_id},{$set:{ password}})
-
-  res.status(200).json({update})
+const resetPassword =  async (req , res) =>{
+try {
+    const token = req.query.token;
+ const tokenData = await Users.findOne({token:token});
+ if(tokenData){
+    const password = req.body.password
+  const newPassword =  await securePassword(password);
+  await Users.findByIdAndUpdate({_id: tokenData._id},{$set:{password: newPassword, token:''}},{new: true})
+  res.status(300).json({msg:'User password has been reset, Login now'})
+ } else{
+    res.status(400).json({msg:'This link has expired'})
+ }
     
-
+} catch (error) {
+    console.log(error)
 }
-module.exports = {register , login , changePassword, logout}
+}
+
+module.exports = {register , login , forgetPassword , resetPassword}
